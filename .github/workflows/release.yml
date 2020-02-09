@@ -12,14 +12,15 @@ jobs:
       - name: Get Arch
         run: |
           echo ::set-env name=ARCH::$(uname -m)
+          echo ::set-env name=TIME::$(date "+%Y-%m-%d_%H:%M:%S")
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: env.ARCH
-          release_name: Release env.ARCH
+          tag_name: env.TIME
+          release_name: Release env.TIME
           body: |
             Changes in this Release
             - First Change
