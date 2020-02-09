@@ -12,7 +12,7 @@ jobs:
       - name: Get Arch
         run: |
           echo ::set-env name=ARCH::$(uname -m)
-          echo ::set-env name=TIME::$(date "+%Y-%m-%d_%H:%M:%S")
+          echo ::set-env name=TIME::$(date "+%Y%m%d%H%M%S")
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
