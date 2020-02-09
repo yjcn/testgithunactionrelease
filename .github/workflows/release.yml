@@ -9,14 +9,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@master
+      - name: Get Arch
+        run: |
+          echo ::set-env name=ARCH::$(uname -m)
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: "test"
-          release_name: Release test
+          tag_name: env.ARCH
+          release_name: Release env.ARCH
           body: |
             Changes in this Release
             - First Change
