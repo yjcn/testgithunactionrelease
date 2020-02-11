@@ -6,13 +6,17 @@ jobs:
   armv7_job:
     runs-on: ubuntu-18.04
     name: Build on ARMv7 
+    strategy:
+      matrix:
+        arch: [armv7]
+        dist: [buster, ubuntu18.04]
     steps:
       - uses: actions/checkout@v1.0.0
       - uses: uraimo/run-on-arch-action@v1.0.5
         id: runcmd
         with:
           architecture: armv7
-          distribution: buster
+          distribution: ${{ matrix.dist }}
           additionalArgs: <additional args for architecture specific docker, optional>
           run: |
             uname -a
@@ -21,6 +25,7 @@ jobs:
             apt-get install -y build-essential pkg-config automake libtool git zlib1g-dev
             echo `gcc -v`
             echo `apt search gcc`
+            echo `apt search libboost`
       - name: Get the output
         run: |
             echo "The uname output was ${{ steps.runcmd.outputs.uname }}"
