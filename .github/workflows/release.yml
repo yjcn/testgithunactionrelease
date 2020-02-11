@@ -18,19 +18,7 @@ jobs:
             uname -a
             echo ::set-output name=uname::$(uname -a)
             echo `gcc -v`
-            apt-get update
-            apt-get install -y build-essential pkg-config automake libtool git zlib1g-dev
-            apt-get install -y libboost1.62-dev libboost-system1.62-dev libboost-chrono1.62-dev libboost-random1.62-dev libssl-dev libgeoip-dev
-            git clone https://github.com/arvidn/libtorrent.git
-            cd libtorrent
-            libtorrentlatestTag=$(git describe --tags `git rev-list --tags --max-count=1`)
-            echo ::set-env name=libtorrentlatestTag::${libtorrentlatestTag}
-            echo checking out ${libtorrentlatestTag}
-            git checkout ${libtorrentlatestTag}
-            ./autotool.sh
-            ./configure --disable-debug --enable-encryption CXXFLAGS="-std=c++14"
-            make clean && make -j$(nproc)
-            make install
+            echo `apt search gcc`
       - name: Get the output
         run: |
             echo "The uname output was ${{ steps.runcmd.outputs.uname }}"
