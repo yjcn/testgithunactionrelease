@@ -1,29 +1,35 @@
-on: push
-
-name: Create Release
+on:
+  watch:
+    types: [started]
 
 jobs:
-  build:
-    name: Create Release
-    runs-on: ubuntu-latest
+  armv7_job:
+    runs-on: ubuntu-18.04
+    name: Build on ARMv7 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@master
-      - name: Get Arch
-        run: |
-          echo ::set-env name=ARCH::$(uname -m)
-          echo ::set-env name=TIME::$(date "+%Y%m%d%H%M%S")
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      - uses: actions/checkout@v1.0.0
+      - uses: uraimo/run-on-arch-action@v1.0.5
+        id: runcmd
         with:
-          tag_name: ${{ env.TIME }}
-          release_name: Release ${{ env.TIME }}
-          body: |
-            Changes in this Release
-            - First Change
-            - Second Change
-          draft: false
-          prerelease: false
+          architecture: armv7
+          distribution: buster
+          additionalArgs: <additional args for architecture specific docker, optional>
+          run: |
+            uname -a
+            echo ::set-output name=uname::$(uname -a)
+            apt-get update
+            apt-get install -y build-essential pkg-config automake libtool git zlib1g-dev
+            apt-get install -y libboost-dev libboost-system-dev libboost-chrono-dev libboost-random-dev libssl-dev libgeoip-dev
+            git clone https://github.com/arvidn/libtorrent.git
+            cd libtorrent
+            libtorrentlatestTag=$(git describe --tags `git rev-list --tags --max-count=1`)
+            echo ::set-env name=libtorrentlatestTag::${libtorrentlatestTag}
+            echo checking out ${libtorrentlatestTag}
+            git checkout ${libtorrentlatestTag}
+            ./autotool.sh
+            ./configure --disable-debug --enable-encryption CXXFLAGS="-std=c++14"
+            make clean && make -j$(nproc)
+            make install
+      - name: Get the output
+        run: |
+            echo "The uname output was ${{ steps.runcmd.outputs.uname }}"
