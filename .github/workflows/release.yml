@@ -8,8 +8,8 @@ jobs:
     name: Build on ARM
     strategy:
       matrix:
-        arch: [armv7]
-        dist: [buster, ubuntu18.04]
+        arch: [armv7, aarch64]
+        dist: [buster]
     steps:
       - uses: actions/checkout@v1.0.0
       - uses: uraimo/run-on-arch-action@v1.0.5
