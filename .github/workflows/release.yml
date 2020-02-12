@@ -24,6 +24,7 @@ jobs:
             [[ `uname -m` == "armv7l"  ]] && CONFFLAGS="--with-boost-libdir=/usr/lib/arm-linux-gnueabihf"
             apt-get update
             apt-get install -y build-essential pkg-config automake libtool git zlib1g-dev
+            apt-get install -y libboost-dev libboost-system-dev libboost-chrono-dev libboost-random-dev libssl-dev libgeoip-dev
             echo `gcc -v`
             echo `apt search gcc`
             echo `apt search libboost`
