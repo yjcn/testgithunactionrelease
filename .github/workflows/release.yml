@@ -12,7 +12,7 @@ jobs:
         dist: [buster, ubuntu18.04]
     steps:
       - uses: actions/checkout@v1.0.0
-      - uses: uraimo/run-on-arch-action@v1.0.5
+      - uses: uraimo/run-on-arch-action@v1.0.7
         id: runcmd
         with:
           architecture: ${{ matrix.arch }}
