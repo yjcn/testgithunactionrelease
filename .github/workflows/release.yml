@@ -5,41 +5,27 @@ on:
 jobs:
   armv7_job:
     runs-on: ubuntu-18.04
-    name: Build on ARM
+    name: Build on ARMv7 
     strategy:
       matrix:
         arch: [armv7]
-        dist: [buster]
+        dist: [buster, ubuntu18.04]
     steps:
       - uses: actions/checkout@v1.0.0
-      - uses: uraimo/run-on-arch-action@master
+      - uses: uraimo/run-on-arch-action@v1.0.5
         id: runcmd
         with:
-          architecture: ${{ matrix.arch }}
+          architecture: armv7
           distribution: ${{ matrix.dist }}
           additionalArgs: <additional args for architecture specific docker, optional>
           run: |
             uname -a
             echo ::set-output name=uname::$(uname -a)
-            [[ `uname -m` == "arm7l"  ]] && CONFFLAGS="--with-boost-libdir=/usr/lib/arm-linux-gnueabihf"
             apt-get update
             apt-get install -y build-essential pkg-config automake libtool git zlib1g-dev
             echo `gcc -v`
             echo `apt search gcc`
             echo `apt search libboost`
-            apt-get install -y libboost-dev libboost-system-dev libboost-chrono-dev libboost-random-dev libssl-dev libgeoip-dev
-            git clone https://github.com/arvidn/libtorrent.git
-            cd libtorrent
-            git checkout libtorrent-1_2_4
-            ./autotool.sh
-            ./configure --disable-debug --enable-encryption CXXFLAGS="-std=c++14" ${CONFFLAGS}
-            git clone https://github.com/qbittorrent/qBittorrent
-            cd qBittorrent
-            latestTag=$(git describe --tags `git rev-list --tags --max-count=1`)
-            echo ::set-env name=latestTag::${latestTag}
-            echo checking out ${latestTag}
-            git checkout ${latestTag}
-            ./configure --disable-gui CXXFLAGS="-std=c++14" ${CONFFLAGS}
       - name: Get the output
         run: |
             echo "The uname output was ${{ steps.runcmd.outputs.uname }}"
