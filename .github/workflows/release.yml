@@ -15,7 +15,7 @@ jobs:
       - uses: uraimo/run-on-arch-action@v1.0.7
         id: runcmd
         with:
-          architecture: ${{ matrix.arch }}
+          architecture: armv7
           distribution: buster
           additionalArgs: <additional args for architecture specific docker, optional>
           run: |
