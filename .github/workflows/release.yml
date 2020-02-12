@@ -9,10 +9,10 @@ jobs:
     strategy:
       matrix:
         arch: [armv7, aarch64]
-        dist: [ubuntu18.04]
+        dist: [buster]
     steps:
       - uses: actions/checkout@v1.0.0
-      - uses: uraimo/run-on-arch-action@v1.0.5
+      - uses: uraimo/run-on-arch-action@master
         id: runcmd
         with:
           architecture: ${{ matrix.arch }}
@@ -21,6 +21,7 @@ jobs:
           run: |
             uname -a
             echo ::set-output name=uname::$(uname -a)
+            [[ `uname -m` == "arm7l"  ]] && CONFFLAGS="--with-boost-libdir=/usr/lib/arm-linux-gnueabihf"
             apt-get update
             apt-get install -y build-essential pkg-config automake libtool git zlib1g-dev
             echo `gcc -v`
