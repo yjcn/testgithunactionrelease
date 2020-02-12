@@ -21,6 +21,8 @@ jobs:
           run: |
             uname -a
             echo ::set-output name=uname::$(uname -a)
+            [[ `uname -m` == "arm7l"  ]] && CONFFLAGS="--with-boost-libdir=/usr/lib/arm-linux-gnueabihf"
+            echo ${CONFFLAGS}
             apt-get update
             apt-get install -y build-essential pkg-config automake libtool git zlib1g-dev
             echo `gcc -v`
