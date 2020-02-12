@@ -8,7 +8,7 @@ jobs:
     name: Build on ARMv7 
     strategy:
       matrix:
-        arch: [armv7, aarch64]
+        arch: [armv7]
         dist: [buster, ubuntu18.04]
     steps:
       - uses: actions/checkout@v1.0.0
