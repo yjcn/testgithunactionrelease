@@ -8,14 +8,14 @@ jobs:
     name: Build on ARMv7 
     strategy:
       matrix:
-        arch: [armv7]
+        arch: [armv7, aarch64]
         dist: [buster, ubuntu18.04]
     steps:
       - uses: actions/checkout@v1.0.0
       - uses: uraimo/run-on-arch-action@v1.0.5
         id: runcmd
         with:
-          architecture: armv7
+          architecture: ${{ matrix.arch }}
           distribution: ${{ matrix.dist }}
           additionalArgs: <additional args for architecture specific docker, optional>
           run: |
@@ -35,6 +35,7 @@ jobs:
             git checkout libtorrent-1_2_4
             ./autotool.sh
             ./configure --disable-debug --enable-encryption CXXFLAGS="-std=c++14" ${CONFFLAGS}
+            apt-get install -y qtbase5-dev qttools5-dev-tools libqt5svg5-dev
             git clone https://github.com/qbittorrent/qBittorrent
             cd qBittorrent
             latestTag=$(git describe --tags `git rev-list --tags --max-count=1`)
